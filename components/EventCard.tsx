@@ -37,14 +37,12 @@ function formatDate(dateStr: string, allDay: boolean): string {
         weekday: "short",
         month: "short",
         day: "numeric",
-        year: "numeric",
       });
     }
     return date.toLocaleDateString("en-US", {
       weekday: "short",
       month: "short",
       day: "numeric",
-      year: "numeric",
       hour: "numeric",
       minute: "2-digit",
     });
@@ -142,11 +140,8 @@ export default function EventCard({
           </Text>
         </View>
         {!added && (
-          <Pressable
-            onPress={() => setEditing(true)}
-            hitSlop={8}
-          >
-            <Ionicons name="create-outline" size={20} color={Colors.textMuted} />
+          <Pressable onPress={() => setEditing(true)} hitSlop={8} style={styles.editBtn}>
+            <Ionicons name="create-outline" size={18} color={Colors.textMuted} />
           </Pressable>
         )}
       </View>
@@ -159,22 +154,14 @@ export default function EventCard({
 
       <View style={styles.detailsRow}>
         <View style={styles.detail}>
-          <Ionicons
-            name="calendar-outline"
-            size={14}
-            color={Colors.primary}
-          />
+          <Ionicons name="time-outline" size={14} color={Colors.primary} />
           <Text style={styles.detailText}>
             {formatDate(event.startDate, event.allDay)}
           </Text>
         </View>
         {event.location && (
           <View style={styles.detail}>
-            <Ionicons
-              name="location-outline"
-              size={14}
-              color={Colors.accent}
-            />
+            <Ionicons name="location-outline" size={14} color={Colors.accent} />
             <Text style={styles.detailText} numberOfLines={1}>
               {event.location}
             </Text>
@@ -200,7 +187,7 @@ export default function EventCard({
             <ActivityIndicator size="small" color={Colors.white} />
           ) : (
             <>
-              <Ionicons name="add-circle-outline" size={18} color={Colors.white} />
+              <Ionicons name="add" size={20} color={Colors.white} />
               <Text style={styles.addButtonText}>Add to Calendar</Text>
             </>
           )}
@@ -231,12 +218,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     flex: 1,
-    gap: 8,
+    gap: 10,
   },
   dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
   },
   dotPending: {
     backgroundColor: Colors.accent,
@@ -250,23 +237,31 @@ const styles = StyleSheet.create({
     color: Colors.text,
     flex: 1,
   },
+  editBtn: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: Colors.backgroundLight,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   description: {
     fontSize: 14,
     fontFamily: "Inter_400Regular",
     color: Colors.textSecondary,
     marginBottom: 12,
     lineHeight: 20,
-    marginLeft: 16,
+    marginLeft: 20,
   },
   detailsRow: {
     gap: 8,
     marginBottom: 14,
-    marginLeft: 16,
+    marginLeft: 20,
   },
   detail: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 6,
+    gap: 8,
   },
   detailText: {
     fontSize: 13,
@@ -298,10 +293,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 6,
     paddingVertical: 10,
+    backgroundColor: Colors.successBg,
+    borderRadius: 12,
   },
   addedText: {
     fontSize: 14,
-    fontFamily: "Inter_500Medium",
+    fontFamily: "Inter_600SemiBold",
     color: Colors.success,
   },
   editField: {
@@ -313,15 +310,15 @@ const styles = StyleSheet.create({
     color: Colors.textMuted,
     textTransform: "uppercase" as const,
     letterSpacing: 0.5,
-    marginBottom: 4,
+    marginBottom: 6,
   },
   editInput: {
     backgroundColor: Colors.background,
-    borderRadius: 10,
+    borderRadius: 12,
     borderWidth: 1,
     borderColor: Colors.inputBorder,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
     color: Colors.text,
     fontSize: 15,
     fontFamily: "Inter_400Regular",
@@ -336,17 +333,17 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   cancelEditButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: Colors.background,
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: Colors.backgroundLight,
     alignItems: "center",
     justifyContent: "center",
   },
   saveEditButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 42,
+    height: 42,
+    borderRadius: 21,
     backgroundColor: Colors.primary,
     alignItems: "center",
     justifyContent: "center",

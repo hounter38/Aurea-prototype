@@ -10,7 +10,7 @@ import {
   Linking,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
+import Animated, { FadeInDown } from "react-native-reanimated";
 import Colors from "@/constants/colors";
 import { apiRequest } from "@/lib/query-client";
 
@@ -75,13 +75,7 @@ function formatTimeRange(start: string, end: string, allDay: boolean): string {
   const e = formatTime(end);
   if (!s) return "";
   if (!e || s === e) return s;
-  return `${s} – ${e}`;
-}
-
-function isSameDay(d1: Date, d2: Date): boolean {
-  return d1.getFullYear() === d2.getFullYear() &&
-    d1.getMonth() === d2.getMonth() &&
-    d1.getDate() === d2.getDate();
+  return `${s} \u2013 ${e}`;
 }
 
 function dateKey(year: number, month: number, day: number): string {
@@ -204,7 +198,7 @@ export default function CalendarView() {
     <View style={styles.container}>
       <View style={styles.monthHeader}>
         <Pressable onPress={goToPrevMonth} hitSlop={12} style={styles.navBtn}>
-          <Ionicons name="chevron-back" size={22} color={Colors.text} />
+          <Ionicons name="chevron-back" size={20} color={Colors.text} />
         </Pressable>
         <Pressable onPress={goToToday} style={styles.monthTitleWrap}>
           <Text style={styles.monthTitle}>
@@ -215,14 +209,16 @@ export default function CalendarView() {
           )}
         </Pressable>
         <Pressable onPress={goToNextMonth} hitSlop={12} style={styles.navBtn}>
-          <Ionicons name="chevron-forward" size={22} color={Colors.text} />
+          <Ionicons name="chevron-forward" size={20} color={Colors.text} />
         </Pressable>
       </View>
 
       <View style={styles.daysHeader}>
         {DAYS.map((d) => (
           <View key={d} style={styles.dayHeaderCell}>
-            <Text style={[styles.dayHeaderText, (d === "Sun" || d === "Sat") && styles.weekendText]}>{d}</Text>
+            <Text style={[styles.dayHeaderText, (d === "Sun" || d === "Sat") && styles.weekendText]}>
+              {d}
+            </Text>
           </View>
         ))}
       </View>
@@ -237,7 +233,6 @@ export default function CalendarView() {
               const key = dateKey(currentYear, currentMonth, day);
               const isToday = key === todayKey;
               const isSelected = key === selectedDate;
-              const hasEvents = !!eventsByDate[key];
               const dayEvents = eventsByDate[key] || [];
               const dotCount = Math.min(dayEvents.length, 3);
 
@@ -306,9 +301,7 @@ export default function CalendarView() {
                 <Pressable
                   style={styles.eventItem}
                   onPress={() => {
-                    if (ev.htmlLink) {
-                      Linking.openURL(ev.htmlLink);
-                    }
+                    if (ev.htmlLink) Linking.openURL(ev.htmlLink);
                   }}
                 >
                   <View style={[styles.eventColorBar, { backgroundColor: getEventColor(i, ev.color) }]} />
@@ -324,7 +317,7 @@ export default function CalendarView() {
                       </View>
                     )}
                   </View>
-                  <Ionicons name="open-outline" size={14} color={Colors.textMuted} />
+                  <Ionicons name="chevron-forward" size={14} color={Colors.textMuted} />
                 </Pressable>
               </Animated.View>
             ))}
@@ -344,12 +337,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     marginBottom: 16,
+    paddingTop: 4,
   },
   navBtn: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: Colors.backgroundLight,
+    backgroundColor: Colors.card,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -358,18 +352,18 @@ const styles = StyleSheet.create({
   },
   monthTitle: {
     fontSize: 18,
-    fontFamily: "Inter_600SemiBold",
+    fontFamily: "Inter_700Bold",
     color: Colors.text,
   },
   todayLink: {
     fontSize: 12,
-    fontFamily: "Inter_500Medium",
+    fontFamily: "Inter_600SemiBold",
     color: Colors.primary,
     marginTop: 2,
   },
   daysHeader: {
     flexDirection: "row",
-    marginBottom: 8,
+    marginBottom: 6,
   },
   dayHeaderCell: {
     flex: 1,
@@ -377,16 +371,17 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   dayHeaderText: {
-    fontSize: 12,
+    fontSize: 11,
     fontFamily: "Inter_600SemiBold",
     color: Colors.textMuted,
     textTransform: "uppercase",
+    letterSpacing: 0.5,
   },
   weekendText: {
-    color: Colors.textMuted + "80",
+    color: Colors.textMuted + "60",
   },
   calendarGrid: {
-    gap: 2,
+    gap: 1,
   },
   weekRow: {
     flexDirection: "row",
@@ -394,12 +389,12 @@ const styles = StyleSheet.create({
   dayCell: {
     flex: 1,
     alignItems: "center",
-    paddingVertical: 4,
-    minHeight: 48,
-    borderRadius: 8,
+    paddingVertical: 3,
+    minHeight: 46,
+    borderRadius: 10,
   },
   dayCellSelected: {
-    backgroundColor: Colors.primary + "10",
+    backgroundColor: Colors.primary + "12",
   },
   dayCircle: {
     width: 32,
@@ -409,7 +404,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   dayCircleToday: {
-    borderWidth: 1.5,
+    borderWidth: 2,
     borderColor: Colors.primary,
   },
   dayCircleSelected: {
@@ -442,7 +437,7 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: 1,
-    backgroundColor: Colors.cardBorder,
+    backgroundColor: Colors.separator,
     marginVertical: 14,
   },
   eventsSection: {
@@ -451,7 +446,7 @@ const styles = StyleSheet.create({
   },
   eventsSectionTitle: {
     fontSize: 16,
-    fontFamily: "Inter_600SemiBold",
+    fontFamily: "Inter_700Bold",
     color: Colors.text,
     marginBottom: 12,
   },
@@ -496,16 +491,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: Colors.card,
-    borderRadius: 12,
+    borderRadius: 14,
     marginBottom: 8,
-    padding: 12,
-    gap: 10,
+    padding: 14,
+    gap: 12,
     borderWidth: 1,
     borderColor: Colors.cardBorder,
   },
   eventColorBar: {
     width: 4,
-    height: 36,
+    height: 40,
     borderRadius: 2,
   },
   eventContent: {

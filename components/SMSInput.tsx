@@ -34,12 +34,6 @@ export default function SMSInput({ onSubmit, isLoading }: SMSInputProps) {
   return (
     <View style={styles.container}>
       <View style={styles.inputWrapper}>
-        <Ionicons
-          name="chatbubble-outline"
-          size={18}
-          color={Colors.textMuted}
-          style={styles.inputIcon}
-        />
         <TextInput
           style={styles.input}
           value={text}
@@ -84,18 +78,14 @@ const styles = StyleSheet.create({
   },
   inputWrapper: {
     flex: 1,
-    backgroundColor: Colors.inputBg,
+    backgroundColor: Colors.card,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: Colors.inputBorder,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
+    borderColor: Colors.cardBorder,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
     flexDirection: "row",
     alignItems: "flex-start",
-  },
-  inputIcon: {
-    marginTop: 3,
-    marginRight: 8,
   },
   input: {
     flex: 1,
@@ -108,7 +98,7 @@ const styles = StyleSheet.create({
   },
   clearButton: {
     marginTop: 2,
-    padding: 2,
+    padding: 4,
   },
   submitButton: {
     width: 52,

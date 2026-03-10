@@ -55,10 +55,30 @@ function formatDate(dateStr: string): string {
 }
 
 const statusConfig = {
-  processing: { icon: "sync-outline" as const, color: Colors.warning, label: "Processing" },
-  success: { icon: "checkmark-circle" as const, color: Colors.success, label: "Added" },
-  no_events: { icon: "remove-circle-outline" as const, color: Colors.textMuted, label: "No events" },
-  error: { icon: "alert-circle" as const, color: Colors.error, label: "Error" },
+  processing: {
+    icon: "hourglass-outline" as const,
+    color: Colors.warning,
+    bg: Colors.warningBg,
+    label: "Processing",
+  },
+  success: {
+    icon: "checkmark-circle" as const,
+    color: Colors.success,
+    bg: Colors.successBg,
+    label: "Added",
+  },
+  no_events: {
+    icon: "remove-circle-outline" as const,
+    color: Colors.textMuted,
+    bg: Colors.textMuted + "15",
+    label: "No events",
+  },
+  error: {
+    icon: "alert-circle" as const,
+    color: Colors.error,
+    bg: Colors.errorBg,
+    label: "Error",
+  },
 };
 
 export default function WebhookLogItem({ log }: WebhookLogItemProps) {
@@ -74,39 +94,48 @@ export default function WebhookLogItem({ log }: WebhookLogItemProps) {
   return (
     <View style={styles.container}>
       <View style={styles.topRow}>
-        <View style={styles.statusDot}>
-          <Ionicons name={config.icon} size={16} color={config.color} />
-        </View>
-        <View style={styles.info}>
-          <View style={styles.senderRow}>
-            <Text style={styles.sender} numberOfLines={1}>{log.from}</Text>
-            <Text style={styles.time}>
-              {formatDate(log.receivedAt)} {formatTime(log.receivedAt)}
-            </Text>
-          </View>
-          <Text style={styles.smsPreview} numberOfLines={2}>
-            {log.smsText}
+        <View style={[styles.statusChip, { backgroundColor: config.bg }]}>
+          <Ionicons name={config.icon} size={13} color={config.color} />
+          <Text style={[styles.statusLabel, { color: config.color }]}>
+            {config.label}
           </Text>
         </View>
+        <Text style={styles.time}>
+          {formatDate(log.receivedAt)} {formatTime(log.receivedAt)}
+        </Text>
+      </View>
+
+      <View style={styles.messageSection}>
+        <Text style={styles.sender} numberOfLines={1}>
+          {log.from}
+        </Text>
+        <Text style={styles.smsPreview} numberOfLines={2}>
+          {log.smsText}
+        </Text>
       </View>
 
       {log.status === "success" && log.events.length > 0 && (
         <View style={styles.eventsCreated}>
           {log.events.map((event: any, i: number) => (
-            <View key={i} style={styles.createdEvent}>
-              <Ionicons name="calendar" size={13} color={Colors.success} />
+            <Pressable
+              key={i}
+              style={styles.createdEvent}
+              onPress={() =>
+                log.googleLinks[i] && handleOpenLink(log.googleLinks[i])
+              }
+            >
+              <Ionicons name="calendar" size={14} color={Colors.success} />
               <Text style={styles.createdEventTitle} numberOfLines={1}>
                 {event.title}
               </Text>
-              {log.googleLinks[i] ? (
-                <Pressable
-                  onPress={() => handleOpenLink(log.googleLinks[i])}
-                  hitSlop={6}
-                >
-                  <Ionicons name="open-outline" size={14} color={Colors.primary} />
-                </Pressable>
-              ) : null}
-            </View>
+              {log.googleLinks[i] && (
+                <Ionicons
+                  name="open-outline"
+                  size={13}
+                  color={Colors.textMuted}
+                />
+              )}
+            </Pressable>
           ))}
         </View>
       )}
@@ -125,7 +154,7 @@ export default function WebhookLogItem({ log }: WebhookLogItemProps) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.card,
-    borderRadius: 14,
+    borderRadius: 16,
     padding: 14,
     borderWidth: 1,
     borderColor: Colors.cardBorder,
@@ -133,32 +162,33 @@ const styles = StyleSheet.create({
   },
   topRow: {
     flexDirection: "row",
-    alignItems: "flex-start",
-    gap: 10,
-  },
-  statusDot: {
-    marginTop: 2,
-  },
-  info: {
-    flex: 1,
-    gap: 4,
-  },
-  senderRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
+    justifyContent: "space-between",
   },
-  sender: {
-    fontSize: 14,
+  statusChip: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  statusLabel: {
+    fontSize: 12,
     fontFamily: "Inter_600SemiBold",
-    color: Colors.text,
-    flex: 1,
   },
   time: {
     fontSize: 12,
     fontFamily: "Inter_400Regular",
     color: Colors.textMuted,
-    marginLeft: 8,
+  },
+  messageSection: {
+    gap: 3,
+  },
+  sender: {
+    fontSize: 15,
+    fontFamily: "Inter_600SemiBold",
+    color: Colors.text,
   },
   smsPreview: {
     fontSize: 13,
@@ -167,35 +197,32 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   eventsCreated: {
-    marginLeft: 26,
     gap: 6,
   },
   createdEvent: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 6,
-    backgroundColor: Colors.success + "12",
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
+    gap: 8,
+    backgroundColor: Colors.successBg,
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
   },
   createdEventTitle: {
-    fontSize: 13,
+    fontSize: 14,
     fontFamily: "Inter_500Medium",
     color: Colors.text,
     flex: 1,
   },
   noEventsSummary: {
-    fontSize: 12,
+    fontSize: 13,
     fontFamily: "Inter_400Regular",
     color: Colors.textMuted,
-    marginLeft: 26,
-    lineHeight: 17,
+    lineHeight: 18,
   },
   errorText: {
-    fontSize: 12,
+    fontSize: 13,
     fontFamily: "Inter_400Regular",
     color: Colors.error,
-    marginLeft: 26,
   },
 });

@@ -72,12 +72,12 @@ export default function HistoryItem({ event, onDelete }: HistoryItemProps) {
       </View>
       <View style={styles.actions}>
         {event.googleLink && (
-          <Pressable onPress={handleOpen} hitSlop={8}>
-            <Ionicons name="open-outline" size={18} color={Colors.primary} />
+          <Pressable onPress={handleOpen} hitSlop={8} style={styles.actionBtn}>
+            <Ionicons name="open-outline" size={16} color={Colors.primary} />
           </Pressable>
         )}
-        <Pressable onPress={handleDelete} hitSlop={8}>
-          <Ionicons name="trash-outline" size={18} color={Colors.error} />
+        <Pressable onPress={handleDelete} hitSlop={8} style={styles.actionBtn}>
+          <Ionicons name="trash-outline" size={16} color={Colors.error} />
         </Pressable>
       </View>
     </View>
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: Colors.card,
-    borderRadius: 12,
+    borderRadius: 14,
     padding: 14,
     borderWidth: 1,
     borderColor: Colors.cardBorder,
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   divider: {
     width: 1,
     height: 32,
-    backgroundColor: Colors.cardBorder,
+    backgroundColor: Colors.separator,
     marginHorizontal: 12,
   },
   content: {
@@ -136,7 +136,15 @@ const styles = StyleSheet.create({
   },
   actions: {
     flexDirection: "row",
-    gap: 14,
+    gap: 8,
     marginLeft: 8,
+  },
+  actionBtn: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: Colors.backgroundLight,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
